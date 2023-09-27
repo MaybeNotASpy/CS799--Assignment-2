@@ -19,6 +19,7 @@
 #include "Functions/function.hpp"
 #include "Functions/dejong.hpp"
 #include "bitstring.hpp"
+#include "util.hpp"
 
 // --------------------
 // Third-party library includes.

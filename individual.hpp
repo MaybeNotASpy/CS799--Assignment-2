@@ -29,7 +29,7 @@ public:
         assert(function.getXRange().first < function.getXRange().second);
         assert(function.getNumberOfVariables() == number_of_variables);
         assert(vector.size() == variable_size * number_of_variables);
-        this->vector.randomize();
+        randomize();
     }
 
     /**
@@ -132,6 +132,7 @@ public:
         auto input = this->vector.decode();
         auto result = this->function.eval(input);
         auto fitness = this->function.fitnessFunction(result);
+        assert(fitness >= 0.0);
         cached_fitness = std::make_tuple(fitness, result);
     }
 

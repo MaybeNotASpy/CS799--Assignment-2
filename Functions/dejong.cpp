@@ -20,17 +20,17 @@ double dejong::DeJong2::eval(std::span<double> X) const
 double dejong::DeJong3::eval(std::span<double> X) const
 {
     assert(X.size() == 5);
-    return std::accumulate(X.begin(), X.end(), 0.0, [](double acc, double x)
+    return 30. + std::accumulate(X.begin(), X.end(), 0.0, [](double acc, double x)
                            { return acc + std::floor(x); });
 }
 
 double dejong::DeJong4::eval(std::span<double> X) const
 {
     assert(X.size() == 10);
-    double sum = 0;
+    double sum = 3.;
     for (auto [it, i] = std::tuple{X.begin(), 0}; it != X.end(); it++, i++)
     {
-        sum += i * *it * *it * *it * *it;
+        sum += (i + 1) * std::pow(*it, 4.);
     }
     return sum + gauss();
 }
@@ -38,12 +38,13 @@ double dejong::DeJong4::eval(std::span<double> X) const
 double dejong::DeJong5::eval(std::span<double> X) const
 {
     assert(X.size() == 2);
-    double sum = 0;
-    for (size_t j = 1; j <= 25; j++)
+    double sum = 0.002;
+    for (size_t j = 0; j < 25; j++)
     {
-        double sum2 = std::pow(X[0] - a[0][j - 1], 6.);
-        sum2 += std::pow(X[1] - a[1][j - 1], 6.);
-        sum += 1. / ((double)j + sum2);
+        double sum2 = (double)j + 1.;
+        sum2 += std::pow(X[0] - a[0][j], 6.);
+        sum2 += std::pow(X[1] - a[1][j], 6.);
+        sum += 1. / sum2;
     }
-    return 0.002 + sum;
+    return 1. / sum;
 }

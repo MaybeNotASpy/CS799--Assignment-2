@@ -1,5 +1,6 @@
 #pragma once
 #include "algorithm.hpp"
+extern std::mt19937 &get_generator();
 #include <ranges>
 
 class CHC : public Algorithm

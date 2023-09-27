@@ -7,11 +7,11 @@ void parameter_search()
     auto dejong3 = dejong::DeJong3();
     auto dejong4 = dejong::DeJong4();
     auto dejong5 = dejong::DeJong5();
-    random_parameter_search(50, 100, 0.7, 0.001, 16, 3, dejong1, 1000, "dejong1.csv");
-    random_parameter_search(50, 100, 0.7, 0.001, 16, 2, dejong2, 1000, "dejong2.csv");
-    random_parameter_search(50, 100, 0.7, 0.001, 16, 5, dejong3, 1000, "dejong3.csv");
-    random_parameter_search(50, 100, 0.7, 0.001, 16, 10, dejong4, 1000, "dejong4.csv");
-    random_parameter_search(50, 100, 0.7, 0.001, 16, 2, dejong5, 1000, "dejong5.csv");
+    random_parameter_search(50, 100, 0.7, 0.001, 32, 3, dejong1, 1000, "dejong1.csv");
+    random_parameter_search(50, 100, 0.7, 0.001, 32, 2, dejong2, 1000, "dejong2.csv");
+    random_parameter_search(50, 100, 0.7, 0.001, 32, 5, dejong3, 1000, "dejong3.csv");
+    random_parameter_search(50, 100, 0.7, 0.001, 32, 10, dejong4, 1000, "dejong4.csv");
+    random_parameter_search(50, 100, 0.7, 0.001, 32, 2, dejong5, 1000, "dejong5.csv");
 }
 
 void GAPerformance()
@@ -21,11 +21,11 @@ void GAPerformance()
     auto dejong3 = dejong::DeJong3();
     auto dejong4 = dejong::DeJong4();
     auto dejong5 = dejong::DeJong5();
-    run_simple_ga(180, 130, 0.66, 0.0064, 16, 3, dejong1, 30, "ga_performance_dejong1.csv");
-    run_simple_ga(130, 170, 0.6, 0.001, 16, 2, dejong2, 30, "ga_performance_dejong2.csv");
-    run_simple_ga(140, 140, 0.1085, 0.0025, 16, 5, dejong3, 30, "ga_performance_dejong3.csv");
-    run_simple_ga(180, 100, 0.68, 0.058, 16, 10, dejong4, 30, "ga_performance_dejong4.csv");
-    run_simple_ga(60, 30, 0.013, 0.0028, 16, 2, dejong5, 30, "ga_performance_dejong5.csv");
+    run_simple_ga(180, 130, 0.66, 0.0064, 32, 3, dejong1, 30, "ga_performance_dejong1.csv");
+    run_simple_ga(130, 170, 0.6, 0.001, 32, 2, dejong2, 30, "ga_performance_dejong2.csv");
+    run_simple_ga(140, 140, 0.1085, 0.0025, 32, 5, dejong3, 30, "ga_performance_dejong3.csv");
+    run_simple_ga(180, 100, 0.68, 0.058, 32, 10, dejong4, 30, "ga_performance_dejong4.csv");
+    run_simple_ga(60, 30, 0.013, 0.0028, 32, 2, dejong5, 30, "ga_performance_dejong5.csv");
 }
 
 void CHCPerformance()
@@ -35,11 +35,11 @@ void CHCPerformance()
     auto dejong3 = dejong::DeJong3();
     auto dejong4 = dejong::DeJong4();
     auto dejong5 = dejong::DeJong5();
-    run_chc(50, 75, 0.95, 0.05, 16, 3, dejong1, 30, "chc_performance_dejong1.csv");
-    run_chc(50, 75, 0.95, 0.05, 16, 2, dejong2, 30, "chc_performance_dejong2.csv");
-    run_chc(50, 75, 0.95, 0.05, 16, 5, dejong3, 30, "chc_performance_dejong3.csv");
-    run_chc(50, 75, 0.95, 0.05, 16, 10, dejong4, 30, "chc_performance_dejong4.csv");
-    run_chc(50, 75, 0.95, 0.05, 16, 2, dejong5, 30, "chc_performance_dejong5.csv");
+    run_chc(50, 75, 0.95, 0.05, 32, 3, dejong1, 30, "chc_performance_dejong1.csv");
+    run_chc(50, 75, 0.95, 0.05, 32, 2, dejong2, 30, "chc_performance_dejong2.csv");
+    run_chc(50, 75, 0.95, 0.05, 32, 5, dejong3, 30, "chc_performance_dejong3.csv");
+    run_chc(50, 75, 0.95, 0.05, 32, 10, dejong4, 30, "chc_performance_dejong4.csv");
+    run_chc(50, 75, 0.95, 0.05, 32, 2, dejong5, 30, "chc_performance_dejong5.csv");
 }
 
 int main(int argc, char **argv)

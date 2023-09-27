@@ -1,7 +1,8 @@
 #pragma once
 #include "algorithm.hpp"
-
 #include <array>
+
+extern std::mt19937 &get_generator();
 
 class SimpleGA : public Algorithm
 {

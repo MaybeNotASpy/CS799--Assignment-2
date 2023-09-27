@@ -2,20 +2,20 @@
 
 std::vector<Individual> CHC::generate_initial_population()
 {
-    std::vector<Individual> population(
-        population_size,
-        Individual(variable_size, number_of_variables, function));
-    for (auto &individual : population)
-    {
-        individual.randomize();
+    std::vector<Individual> population;
+    population.reserve(population_size);
+    for (size_t i = 0; i < population_size; i++) {
+        auto individual = Individual(variable_size, number_of_variables, function);
+        population.emplace_back(std::move(individual));
     }
+    // Randomization is done in the constructor
     return population;
 }
 
 std::vector<Individual> CHC::select_parents(const std::vector<Individual> &population)
 {
     std::vector parents = population;
-    std::shuffle(parents.begin(), parents.end(), generator); 
+    std::shuffle(parents.begin(), parents.end(), get_generator()); 
     return parents;
 }
 
@@ -77,7 +77,7 @@ std::vector<Individual> CHC::crossover(
             auto child1 = recomb_parents[i];
             auto child2 = recomb_parents[i + 1];
             //Select half of the different indices to be flipped randomly
-            std::shuffle(different_indices.begin(), different_indices.end(), generator);
+            std::shuffle(different_indices.begin(), different_indices.end(), get_generator());
             for (auto index : std::ranges::take_view{different_indices, (int) different_indices.size() / 2})
             {
                 child1.setValueAt(index, recomb_parents[i + 1].getVector()[index]);
@@ -102,7 +102,7 @@ void CHC::mutate(std::vector<Individual> &children)
         std::uniform_real_distribution<double> distribution(0.0, 1.0);
         for (size_t i = 0; i < variable_size * number_of_variables; i++)
         {
-            if (distribution(generator) < mutation_prob)
+            if (distribution(get_generator()) < mutation_prob)
             {
                 individual.flip(i);
             }
@@ -182,7 +182,7 @@ std::vector<Individual> CHC::diverge_if_converged(const std::vector<Individual> 
         // Magical way to generate a random permutation of indices
         std::vector<size_t> indices(individual.getVector().size());
         std::iota(indices.begin(), indices.end(), 0);
-        std::shuffle(indices.begin(), indices.end(), generator);
+        std::shuffle(indices.begin(), indices.end(), get_generator());
 
         for (auto index : indices | std::views::take(number_of_bit_flips))
         {

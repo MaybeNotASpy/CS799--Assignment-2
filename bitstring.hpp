@@ -8,6 +8,8 @@
 #include <cassert>
 #include <cmath>
 
+extern std::mt19937 &get_generator();
+
 class bitstring : public std::vector<uint8_t>
 {
 private:
@@ -28,6 +30,7 @@ private:
         assert(this->size() % this->groups == 0);
         assert(this->min < this->max);
         assert(this->groups > 0);
+        assert(this->size() / this->groups <= 64);
     };
 
 public:
@@ -39,7 +42,7 @@ public:
     {
         assertions();
     };
-    bitstring(size_t size, double in_min, double in_max, size_t in_groups) : std::vector<uint8_t>(size * in_groups),
+    bitstring(size_t size_of_one_group, double in_min, double in_max, size_t in_groups) : std::vector<uint8_t>(size_of_one_group * in_groups),
                                                                              min(in_min),
                                                                              max(in_max),
                                                                              groups(in_groups)
@@ -105,8 +108,11 @@ public:
      */
     void randomize()
     {
-        std::generate(this->begin(), this->end(), []()
-                      { return rand() % 2; });
+        std::uniform_int_distribution<uint8_t> distribution(0, 1);
+        for (size_t i = 0; i < this->size(); i++)
+        {
+            this->at(i) = distribution(get_generator());
+        }
     };
 
     /**
@@ -140,10 +146,20 @@ public:
         // First convert the binary number to an unsigned long long.
         assert(end < this->size());
         assert(start < end);
-        auto val = std::accumulate(this->begin() + (long)start, this->begin() + (long)end, 0, [](auto acc, auto res)
-                                   { return (acc << 1) | res; });
+        assert(end - start == this->size() / this->groups - 1);
+        uint32_t val = 0;
+        for (size_t i = start; i <= end; i++)
+        {
+            val *= 2;
+            val += this->at(i);
+        }
         // Then convert the unsigned long long to a double.
-        return min + (max - min) * val / (std::pow(2, (end - start)) - 1);
+        auto divided = (double) val / max_full_size();
+        assert(divided >= 0.0 && divided <= 1.0);
+        auto range = max - min;
+        auto res = min + range * divided;
+        assert(res >= min && res <= max);
+        return res;
     };
 
     /**
@@ -165,7 +181,7 @@ public:
         for (auto v : val)
         {
             // First convert the double to an unsigned long long.
-            auto int_val = (uint64_t)((v - min) * (std::pow(2, this->size()) - 1) / (max - min));
+            auto int_val = (uint64_t)((v - min) * max_full_size() / (max - min));
             // Then convert the unsigned long long to a binary number.
             for (size_t i = 0; i < this->size(); i++)
             {
@@ -193,12 +209,12 @@ public:
     };
 
     /**
-     * @brief Get the number of values the bitstring can have.
-     * @return The number of values the bitstring can have.
+     * @brief Get the number of values each variable in the bitstring can have.
+     * @return The number of values each variable in the bitstring can have.
      */
     double max_full_size() const
     {
-        return std::pow(2, this->size()) - 1;
+        return std::pow(2, this->size() / this->groups) - 1;
     };
 
     /**

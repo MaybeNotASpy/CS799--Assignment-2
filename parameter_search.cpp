@@ -8,6 +8,8 @@
 #include "Functions/dejong.hpp"
 #include "Algorithms/simple_ga.hpp"
 
+extern std::mt19937 &get_generator();
+
 // Function to perform a random parameter search on the SimpleGA algorithm.
 // The results are written to a file.
 void random_parameter_search(size_t population_size, size_t num_of_generations, double crossover_prob, double mutation_prob, size_t chromosome_size, size_t number_of_chromosomes, OptimizationFunction &function, size_t num_of_runs, std::string filename)
@@ -22,8 +24,7 @@ void random_parameter_search(size_t population_size, size_t num_of_generations, 
     }
     file << "Run,Best Fitness,Best Value,Population Size,Generations,Crossover Prob., Mutation Prob." << std::endl;
 
-    // Set up the random number generator.
-    std::default_random_engine generator((long unsigned int)std::chrono::system_clock::now().time_since_epoch().count());
+    // Set up the random number distributions.
     std::uniform_int_distribution<int> population_size_dist(10, 200);
     std::uniform_int_distribution<int> generations_dist(10, 200);
     std::uniform_real_distribution<double> crossover_dist(0.0, 1.0);
@@ -43,10 +44,10 @@ void random_parameter_search(size_t population_size, size_t num_of_generations, 
         auto internal_mutation_prob = mutation_prob;
         if (i != 0)
         {
-            internal_population_size = (size_t)population_size_dist(generator);
-            internal_num_of_generations = (size_t)generations_dist(generator);
-            internal_crossover_prob = crossover_dist(generator);
-            internal_mutation_prob = mutation_dist(generator);
+            internal_population_size = (size_t)population_size_dist(get_generator());
+            internal_num_of_generations = (size_t)generations_dist(get_generator());
+            internal_crossover_prob = crossover_dist(get_generator());
+            internal_mutation_prob = mutation_dist(get_generator());
         }
         std::cout << "Run " << i << " of " << num_of_runs - 1 << std::endl;
         auto algorithm = SimpleGA(internal_population_size, internal_num_of_generations, internal_crossover_prob, internal_mutation_prob, chromosome_size, number_of_chromosomes, function);

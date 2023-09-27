@@ -54,8 +54,6 @@ protected:
     size_t number_of_variables;
     OptimizationFunction &function;
 
-    std::default_random_engine generator = std::default_random_engine((long unsigned int)std::chrono::system_clock::now().time_since_epoch().count());
-
 public:
     Algorithm(
         size_t pop_size,

@@ -9,6 +9,8 @@
 #include <cassert>
 #include <initializer_list>
 
+extern std::mt19937& get_generator();
+
 /**
  * The OptimizationFunction class represents the function that we are trying to
  * optimize. It provides a method to evaluate the fitness of a bit vector.
@@ -42,6 +44,12 @@ public:
     virtual double getMinY() const = 0;
 
     /**
+     * Get the maximum value of the function.
+     * @return The maximum value of the function.
+     */
+    virtual double getMaxY() const = 0;
+
+    /**
      * Get the number of variables of the function.
      * @return The number of variables of the function.
      */
@@ -52,5 +60,9 @@ public:
      * @param solution The result to convert.
      * @return The fitness value of the result.
      */
-    virtual double fitnessFunction(double result) = 0;
+    double fitnessFunction(double result) {
+        auto res = getMaxY() - result;
+        assert(res >= 0.0);
+        return res;
+    };
 };

@@ -4,7 +4,7 @@ std::pair<size_t, size_t> SimpleGA::proportional_selection(std::vector<Individua
 {
     std::uniform_real_distribution<double> distribution(0.0, 1.0);
     double sum = std::accumulate(fitness.begin(), fitness.end(), 0.0);
-    double random = distribution(generator) * sum;
+    double random = distribution(get_generator()) * sum;
     size_t parent1_index = 0;
     size_t parent2_index = population.size() - 1;
     double partial_sum = 0.0;
@@ -35,7 +35,7 @@ std::pair<size_t, size_t> SimpleGA::proportional_selection(std::vector<Individua
 std::pair<Individual, Individual> SimpleGA::crossover(Individual &parent1, Individual &parent2)
 {
     std::uniform_int_distribution<size_t> distribution(0, variable_size * number_of_variables - 1);
-    auto crossover_point = distribution(generator);
+    auto crossover_point = distribution(get_generator());
     Individual child1 = parent1;
     Individual child2 = parent2;
     for (size_t i = crossover_point; i < variable_size * number_of_variables; i++)
@@ -51,7 +51,7 @@ void SimpleGA::mutate(Individual &individual)
     std::uniform_real_distribution<double> distribution(0.0, 1.0);
     for (size_t i = 0; i < variable_size * number_of_variables; i++)
     {
-        if (distribution(generator) < mutation_prob)
+        if (distribution(get_generator()) < mutation_prob)
         {
             individual.flip(i);
         }
@@ -62,9 +62,12 @@ std::vector<GenerationPerformance> SimpleGA::run()
 {
     std::vector<GenerationPerformance> performance;
     performance.resize(num_of_generations);
-    std::vector<Individual> population(
-        population_size,
-        Individual(variable_size, number_of_variables, function));
+    std::vector<Individual> population;
+    population.reserve(population_size);
+    for (size_t i = 0; i < population_size; i++)
+    {
+        population.push_back(Individual(variable_size, number_of_variables, function));
+    }
 
     std::vector<double> generation_fitness(population_size);
     std::vector<double> objective_function_values(population_size);
@@ -112,7 +115,8 @@ std::vector<GenerationPerformance> SimpleGA::run()
             worst_x};
 
         // Create new population.
-        std::vector<Individual> new_population(population_size, Individual(variable_size, number_of_variables, function));
+        std::vector<Individual> new_population;
+        new_population.reserve(population_size);
         for (size_t i = 0; i < population_size - 1; i += 2)
         {
             // Select parents.
@@ -125,7 +129,7 @@ std::vector<GenerationPerformance> SimpleGA::run()
             // Crossover.
 
             auto distribution_of_chances = std::uniform_real_distribution<double>(0.0, 1.0);
-            if (distribution_of_chances(generator) < crossover_prob)
+            if (distribution_of_chances(get_generator()) < crossover_prob)
             {
                 auto children = crossover(parent1, parent2);
                 child1 = children.first;
@@ -137,8 +141,8 @@ std::vector<GenerationPerformance> SimpleGA::run()
             mutate(child2);
 
             // Add children to new population.
-            new_population[i] = child1;
-            new_population[i + 1] = child2;
+            new_population.push_back(child1);
+            new_population.push_back(child2);
         }
         population = new_population;
     }
