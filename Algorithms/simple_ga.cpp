@@ -91,12 +91,13 @@ std::vector<GenerationPerformance> SimpleGA::run()
         auto best_fitness = *it_of_best_fitness;
         auto average_fitness = std::accumulate(generation_fitness.begin(), generation_fitness.end(), 0.0) / (double)population_size;
         auto worst_fitness = *it_of_worst_fitness;
-        auto best_objective_function_value = *std::max_element(objective_function_values.begin(), objective_function_values.end());
-        auto average_objective_function_value = std::accumulate(objective_function_values.begin(), objective_function_values.end(), 0.0) / (double)population_size;
-        auto worst_objective_function_value = *std::min_element(objective_function_values.begin(), objective_function_values.end());
-
+        
         auto index_of_best_x = (size_t)std::distance(generation_fitness.begin(), it_of_best_fitness);
         auto index_of_worst_x = (size_t)std::distance(generation_fitness.begin(), it_of_worst_fitness);
+
+        auto best_objective_function_value = objective_function_values[index_of_best_x];
+        auto average_objective_function_value = std::accumulate(objective_function_values.begin(), objective_function_values.end(), 0.0) / (double)population_size;
+        auto worst_objective_function_value = objective_function_values[index_of_worst_x];
 
         auto best_x = population[index_of_best_x].getVector().decode();
         auto worst_x = population[index_of_worst_x].getVector().decode();
